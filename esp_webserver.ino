@@ -2,6 +2,8 @@
 #include <WebServer.h>
 #include <WebSocketsServer.h>
 #include <ArduinoJson.h>
+#include <FS.h>
+#include <SPIFFS.h>
 
 const char* ssid = "NCEP_ESP";
 const char* password = "12345678";
@@ -65,8 +67,20 @@ void setup() {
   Serial.print("IP address = ");
   Serial.println(WiFi.softAPIP());
   
+  if (!SPIFFS.begin(true)) { // true => format if failed
+      Serial.println("Failed to mount SPIFFS");
+      return;
+  }
+
   server.on("/", []() {
+    File file = SPIFFS.open("/index.html", "r");
+    if (file) {
+    String webpage = file.readString();
+    file.close();
     server.send(200, "text/html", webpage);
+  } else {
+      server.send(404, "text/plain", "File not found");
+  }
   });
   server.begin();
   

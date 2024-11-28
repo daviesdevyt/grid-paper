@@ -81,7 +81,7 @@
           arr1.length === arr2.length && arr1.every((subArr, i) => subArr.length === arr2[i].length && subArr.every((val, j) => val === arr2[i][j]))
         );
       }
-      
+
       // Clear the grid after 3 seconds
       function finishDrawing() {
         const interpolatedNodes = []; // Interpolated path nodes
@@ -145,8 +145,8 @@
           }
         }
 
-        console.log("Inter Path nodes:", interpolatedNodes);
         console.log("Dirs:", dirs);
+        sendPathInfo(dirs);
         clearTimeoutId = setTimeout(() => {
           pathNodes.length = 0; // Clear path nodes array
           lastNode = null; // Reset last node
@@ -165,6 +165,20 @@
 
       // Initial grid rendering
       drawGrid();
+
+      var Socket;
+      function init() {
+        Socket = new WebSocket("ws://" + window.location.hostname + ":81/");
+        console.log("Pinging");
+      }
+
+      function sendPathInfo(dirs) {
+        Socket.send(JSON.stringify(dirs));
+        console.log("sent", dirs);
+      }
+
+      init();
+      window.onload = function (event) {};
     </script>
   </body>
 </html>
