@@ -12,7 +12,7 @@ IPAddress local_IP(192,168,1,22);
 IPAddress gateway(192,168,1,5);
 IPAddress subnet(255,255,255,0);
 
-String webpage = "<!DOCTYPE html>"
+String webpage1 = "<!DOCTYPE html>"
 "<html>"
 "  <head>"
 "    <title>Page Title</title>"
