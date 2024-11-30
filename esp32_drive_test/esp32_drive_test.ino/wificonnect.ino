@@ -1,25 +1,37 @@
 #include <WiFi.h>
 #include <WebServer.h>
 
+void func(){
+  front(1000);
+  stop();
+  right();
+  stop();
+  left();
+  stop();
+  back(1000);
+  stop();
+  delay(5000);
+}
+
 void handlePostRequest() {
   if (server.hasArg("plain")) {  // Check if the body has plain text
     String body = server.arg("plain");
-    Serial.println("Received POST data:");
-    Serial.println(body);
+    Serial.println("Received POST data: " + body);
+
     server.send(200, "text/plain", "Data received: " + body);
-    if (body == "right"){
-      right();
-    }
-    else if (body == "left"){
-      left();
-    }
-    else if (body == "straight"){
-      front(1000);
-    }
-    else if (body == "back"){
+    if (body == "back") {
       back(1000);
     }
-    stop()
+    if (body == "right") {
+      right();
+    }
+    if (body == "left") {
+      left();
+    }
+    if (body == "straight") {
+      front(1000);
+    }
+    stop();
   } else {
     server.send(400, "text/plain", "Bad Request: No body found");
   }

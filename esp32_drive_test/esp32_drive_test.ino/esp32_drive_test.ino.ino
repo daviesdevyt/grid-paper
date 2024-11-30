@@ -12,11 +12,11 @@ const char* password = "xandoozy";
 WebServer server(80);
 
 void setup() {
+  setupwifi();
   pinMode(pin1, OUTPUT);
   pinMode(pin2, OUTPUT);
   pinMode(pin3, OUTPUT);
   pinMode(pin4, OUTPUT);
-  setupwifi();
 }
 
 void loop() {
