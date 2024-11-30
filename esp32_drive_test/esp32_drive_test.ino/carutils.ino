@@ -37,10 +37,3 @@ void stop(int _del = 500){
   digitalWrite(pin4, LOW);
   delay(_del);
 }
-
-void square(){
-  front(2000);
-  stop();
-  right();
-  stop();
-}

@@ -17,19 +17,19 @@
       const canvas = document.getElementById("gridCanvas");
       const ctx = canvas.getContext("2d");
 
-    
-      const gridCount = 60;
-      const cellSize = 40;
+      // Adjustable grid parameters
+      const gridCount = 60; // Number of cells along one side of the grid
+      const cellSize = 40; // Size of each grid cell in pixels
       canvas.width = gridCount * cellSize;
       canvas.height = gridCount * cellSize;
 
-      const pathNodes = [];
-      let lastNode = null;
+      const pathNodes = []; // Stores positions of nodes in the path
+      let lastNode = null; // Tracks the last node's position
       let clearTimeoutId;
 
-    
+      // Draw the grid
       function drawGrid() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear canvas
         for (let x = 0; x < canvas.width; x += cellSize) {
           for (let y = 0; y < canvas.height; y += cellSize) {
             ctx.strokeRect(x, y, cellSize, cellSize);
@@ -37,27 +37,27 @@
         }
       }
 
-    
+      // Convert coordinates to grid cell position
       function getGridPosition(x, y) {
         const gridX = Math.floor(x / cellSize);
         const gridY = Math.floor(y / cellSize);
         return { gridX, gridY };
       }
 
-    
+      // Check if a position is already in pathNodes
       function isInPath(gridX, gridY) {
         return pathNodes.some((node) => node.gridX === gridX && node.gridY === gridY);
       }
 
-    
+      // Check if movement is valid (up, down, left, right)
       function isValidMove(current, next) {
-        if (!current) return true;
+        if (!current) return true; // Start of the path
         const dx = Math.abs(current.gridX - next.gridX);
         const dy = Math.abs(current.gridY - next.gridY);
-        return (dx === 1 && dy === 0) || (dx === 0 && dy === 1);
+        return (dx === 1 && dy === 0) || (dx === 0 && dy === 1); // No diagonals
       }
 
-    
+      // Handle drawing on the grid
       function handleDraw(event) {
         const rect = canvas.getBoundingClientRect();
         const x = (event.touches ? event.touches[0].clientX : event.clientX) - rect.left;
@@ -73,7 +73,7 @@
           ctx.fillRect(gridX * cellSize, gridY * cellSize, cellSize, cellSize);
         }
 
-    
+        // Reset the clearing timeout if drawing continues
         clearTimeout(clearTimeoutId);
       }
       function isEqualArray(arr1, arr2) {
@@ -82,9 +82,9 @@
         );
       }
 
-    
+      // Clear the grid after 3 seconds
       function finishDrawing() {
-        const interpolatedNodes = [];
+        const interpolatedNodes = []; // Interpolated path nodes
 
         var lNode = pathNodes[0];
         pathNodes.forEach((node) => {
@@ -148,37 +148,37 @@
         console.log("Dirs:", dirs);
         sendPathInfo(dirs);
         clearTimeoutId = setTimeout(() => {
-          pathNodes.length = 0;
-          lastNode = null;
-          drawGrid();
+          pathNodes.length = 0; // Clear path nodes array
+          lastNode = null; // Reset last node
+          drawGrid(); // Redraw the grid without the path
         }, 3000);
       }
 
-    
+      // Event listeners for touch and mouse events
       canvas.addEventListener("touchmove", handleDraw);
       canvas.addEventListener("mousemove", (e) => {
-        if (e.buttons === 1) handleDraw(e);
+        if (e.buttons === 1) handleDraw(e); // Only draw on click-and-drag
       });
 
       canvas.addEventListener("touchend", finishDrawing);
       canvas.addEventListener("mouseup", finishDrawing);
 
-    
+      // Initial grid rendering
       drawGrid();
 
-      function sendPathInfo(dirs) {
-        fetch("/path", {
-          method: "POST",
-          body: dirs.join(","),
-        })
-          .then((response) => response.json())
-          .then((data) => {
-            console.log("Success:", data);
-          })
-          .catch((error) => {
-            console.error("Error:", error);
-          });
+      var Socket;
+      function init() {
+        Socket = new WebSocket("ws://" + window.location.hostname + ":81/");
+        console.log("Pinging");
       }
+
+      function sendPathInfo(dirs) {
+        Socket.send(JSON.stringify(dirs));
+        console.log("sent", dirs);
+      }
+
+      init();
+      window.onload = function (event) {};
     </script>
   </body>
 </html>
