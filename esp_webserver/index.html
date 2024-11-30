@@ -166,19 +166,19 @@
       // Initial grid rendering
       drawGrid();
 
-      var Socket;
-      function init() {
-        Socket = new WebSocket("ws://" + window.location.hostname + ":81/");
-        console.log("Pinging");
-      }
-
       function sendPathInfo(dirs) {
-        Socket.send(JSON.stringify(dirs));
-        console.log("sent", dirs);
+        fetch("/path", {
+          method: "POST",
+          body: dirs.join(","),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("Success:", data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
       }
-
-      init();
-      window.onload = function (event) {};
     </script>
   </body>
 </html>
