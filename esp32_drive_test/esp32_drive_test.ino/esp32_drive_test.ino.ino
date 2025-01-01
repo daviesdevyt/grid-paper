@@ -1,18 +1,24 @@
 #include <WebServer.h>
+// #include <ESPAsyncWebServer.h>
 #include <WiFi.h>
 
 int pin1 = 27;
 int pin2 = 26;
 int pin3 = 25;
 int pin4 = 33;
+
 // Replace with your network credentials
 const char* ssid = "Davies Dev";
 const char* password = "xandoozy";
+
+// const char* ssid = "Davies Dev";
+// const char* password = "xandoozy";
 
 WebServer server(80);
 
 void setup() {
   setupwifi();
+  setupUs_servo();
   pinMode(pin1, OUTPUT);
   pinMode(pin2, OUTPUT);
   pinMode(pin3, OUTPUT);
@@ -20,5 +26,6 @@ void setup() {
 }
 
 void loop() {
-  server.handleClient();
+    server.handleClient();
+  loopUs_servo();
 }
