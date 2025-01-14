@@ -11,15 +11,8 @@
       Serial.println("\nConnecting to Wi-Fi...");
 
       // Connect to Wi-Fi
-      // WiFi.begin(ssid, password);
-
-      IPAddress local_IP(192, 168, 145, 63); 
-      IPAddress gateway(192, 168, 145, 1);
-      IPAddress subnet(255, 255, 255, 0);
-      
-      WiFi.config(local_IP, gateway, subnet);
       WiFi.begin(ssid, password);
-
+      
       // Wait for the connection to establish
       while (WiFi.status() != WL_CONNECTED)
       {
@@ -83,7 +76,6 @@
       if (server.hasArg("plain"))
       { // Check if the body has plain text
           String body = server.arg("plain");
-          Serial.println("Received POST data: " + body);
 
           server.send(200, "text/plain", "Data received: " + body);
 
@@ -93,29 +85,24 @@
 
           char **result = split(input, delimiter, &count);
 
-          // Print the results
           for (int i = 0; i < count; i++)
           {
               Serial.println(result[i]);
-
               if (strcmp(result[i], "back") == 0)
               {
-                  Serial.println("Run B");
                   back(1000);
               }
               if (strcmp(result[i], "right") == 0)
               {
-                  Serial.println("Run R");
                   right();
               }
               if (strcmp(result[i], "left") == 0)
               {
-                  Serial.println("Run L");
                   left();
               }
               if (strcmp(result[i], "straight") == 0)
               {
-                  Serial.println("Run S");
+                  usfunction();
                   front(1000);
               }
               // free(result[i]); // Free each string
